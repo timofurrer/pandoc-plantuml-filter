@@ -55,7 +55,7 @@ class UploadCommand(Command):
 
 setup(
     name='pandoc-plantuml-filter',
-    version='0.1.0',
+    version='0.1.1',
     description='Pandoc filter for PlantUML code blocks',
     long_description='Pandoc filter for PlantUML code blocks',
     author='Timo Furrer',
