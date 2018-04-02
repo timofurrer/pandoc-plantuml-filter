@@ -28,3 +28,8 @@ pandoc tests/sample.md -o sample.pdf --filter pandoc-plantuml
 
 The PlantUML binary must be in your `$PATH` or can be set with the
 `PLANTUML_BIN` environment variable.
+
+## But there is ...
+
+There are a few other filters trying to convert PlantUML code blocks however
+they all failed for me.
