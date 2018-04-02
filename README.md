@@ -11,3 +11,20 @@ Alice -> Bob: Another authentication Request
 Alice <-- Bob: another authentication Response
 ```
 ````
+
+## Usage
+
+Install it with pip:
+
+```
+pip install pandoc-plantuml-filter
+```
+
+And use it like any other pandoc filter:
+
+```
+pandoc tests/sample.md -o sample.pdf --filter pandoc-plantuml
+```
+
+The PlantUML binary must be in your `$PATH` or can be set with the
+`PLANTUML_BIN` environment variable.
