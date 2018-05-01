@@ -21,17 +21,21 @@ pattern = re.compile('%\{(.*)\}$')
 def plantuml(key, value, format_, _):
 
     if key == 'Header':
-        sys.stderr.write(key+"\n")
-        sys.stderr.write(format_+"\n")
-        sys.stderr.write(str(_)'header-includes'].keys())+"\n")
+        if 'tikz'in (str(_)):
+            os.environ["PLANTUML_LATEX_EXPORT"] = 'latex'        
     if key == 'CodeBlock':
         [[ident, classes, keyvals], code] = value
 
         if "plantuml" in classes:
             caption, typef, keyvals = get_caption(keyvals)
-
+            #
+            if "PLANTUML_LATEX_EXPORT" in os.environ:
+                plantuml_latex_export="latex"
+            else:
+                plantuml_latex_export="png"
+            #
             filename = get_filename4code("plantuml", code)
-            filetype = get_extension(format_, "png", html="svg", latex="latex")
+            filetype = get_extension(format_, "png", html="svg", latex=plantuml_latex_export)
 
             src = filename + '.uml'
             dest = filename + '.' + filetype
@@ -44,7 +48,7 @@ def plantuml(key, value, format_, _):
                     f.write(txt)
                 subprocess.check_call(PLANTUML_BIN.split() + ["-t" + filetype, src])
                 sys.stderr.write('Created image ' + dest + '\n')
-            if filetype=="latex":
+            if (filetype=="latex") and (plantuml_latex_export=='latex'):
                 latex = open(dest).read()
                 return RawBlock('latex', latex.split("\\begin{document}")[-1].split("\\end{document}")[0])
             else:           
