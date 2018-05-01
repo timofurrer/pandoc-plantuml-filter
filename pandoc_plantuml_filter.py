@@ -9,7 +9,6 @@ Needs `plantuml.jar` from http://plantuml.com/.
 import os
 import sys
 import subprocess
-import re
 
 from pandocfilters import toJSONFilter, Para, Image, RawBlock
 from pandocfilters import get_filename4code, get_caption, get_extension
