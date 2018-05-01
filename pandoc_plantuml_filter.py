@@ -9,14 +9,21 @@ Needs `plantuml.jar` from http://plantuml.com/.
 import os
 import sys
 import subprocess
+import re
 
 from pandocfilters import toJSONFilter, Para, Image, RawBlock
 from pandocfilters import get_filename4code, get_caption, get_extension
 
 PLANTUML_BIN = os.environ.get('PLANTUML_BIN', 'plantuml')
 
+pattern = re.compile('%\{(.*)\}$')
 
 def plantuml(key, value, format_, _):
+
+    if key == 'Header':
+        sys.stderr.write(key+"\n")
+        sys.stderr.write(format_+"\n")
+        sys.stderr.write(str(_)'header-includes'].keys())+"\n")
     if key == 'CodeBlock':
         [[ident, classes, keyvals], code] = value
 
@@ -34,7 +41,7 @@ def plantuml(key, value, format_, _):
                 if not txt.startswith(b"@start"):
                     txt = b"@startuml\n" + txt + b"\n@enduml\n"
                 with open(src, "wb") as f:
-                    f.write(txt)                    
+                    f.write(txt)
                 subprocess.check_call(PLANTUML_BIN.split() + ["-t" + filetype, src])
                 sys.stderr.write('Created image ' + dest + '\n')
             if filetype=="latex":
