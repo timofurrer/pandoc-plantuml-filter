@@ -1,3 +1,7 @@
+---
+header-includes: |
+    \usepackage{tikz}
+---
 # Some PantUML sample
 
 ```plantuml
