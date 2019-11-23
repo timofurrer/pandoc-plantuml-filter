@@ -29,6 +29,7 @@ def plantuml(key, value, format_, _):
             src = filename + '.uml'
             dest = filename + '.' + filetype
 
+            # Generate image only once
             if not os.path.isfile(dest):
                 txt = code.encode(sys.getfilesystemencoding())
                 if not txt.startswith(b"@start"):
@@ -36,8 +37,20 @@ def plantuml(key, value, format_, _):
                 with open(src, "wb") as f:
                     f.write(txt)
 
-                subprocess.check_call(PLANTUML_BIN.split() + ["-t" + filetype, src])
+                subprocess.check_call(PLANTUML_BIN.split() +
+                                      ["-t" + filetype, src])
                 sys.stderr.write('Created image ' + dest + '\n')
+
+            # Update symlink each run
+            for ind, keyval in enumerate(keyvals):
+                if keyval[0] == 'plantuml-filename':
+                    link = keyval[1]
+                    keyvals.pop(ind)
+                    if os.path.islink(link):
+                        os.remove(link)
+
+                    os.symlink(dest, link)
+                    dest = link
 
             return Para([Image([ident, [], keyvals], caption, [dest, typef])])
 
