@@ -51,6 +51,7 @@ def plantuml(key, value, format_, _):
 
                     os.symlink(dest, link)
                     dest = link
+                    break
 
             return Para([Image([ident, [], keyvals], caption, [dest, typef])])
 
