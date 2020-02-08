@@ -11,11 +11,11 @@ Alice <-- Bob: another authentication Response
 Nice, huh?
 
 # Another example which referenced later
-```{ .plantuml width=60% plantuml-filename=example.png }
+```{ .plantuml width=60% plantuml-filename=images/example.png }
 [producer] -> [consumer]: data streaming
 ```
 
 Here's a UML
 
 # Reference
-![And here's the reference](example.png)
+![And here's the reference](images/example.png)

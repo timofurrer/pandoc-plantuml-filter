@@ -16,6 +16,18 @@ from pandocfilters import get_filename4code, get_caption, get_extension
 PLANTUML_BIN = os.environ.get('PLANTUML_BIN', 'plantuml')
 
 
+def rel_mkdir_symlink(src, dest):
+    dest_dir = os.path.dirname(dest)
+    if not os.path.exists(dest_dir):
+        os.makedirs(dest_dir)
+
+    if os.path.exists(dest):
+        os.remove(dest)
+
+    src = os.path.relpath(src, dest_dir)
+    os.symlink(src, dest)
+
+
 def plantuml(key, value, format_, _):
     if key == 'CodeBlock':
         [[ident, classes, keyvals], code] = value
@@ -46,10 +58,7 @@ def plantuml(key, value, format_, _):
                 if keyval[0] == 'plantuml-filename':
                     link = keyval[1]
                     keyvals.pop(ind)
-                    if os.path.islink(link):
-                        os.remove(link)
-
-                    os.symlink(dest, link)
+                    rel_mkdir_symlink(dest, link)
                     dest = link
                     break
 
