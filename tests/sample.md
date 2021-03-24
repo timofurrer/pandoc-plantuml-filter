@@ -11,7 +11,15 @@ Alice <-- Bob: another authentication Response
 Nice, huh?
 
 # Another example which referenced later
+This tests relative path w/ subdirectory
+
 ```{ .plantuml width=60% plantuml-filename=images/example.png }
+[producer] -> [consumer]: data streaming
+```
+
+This tests relative path w/o subdirectories
+
+```{ .plantuml width=60% plantuml-filename=example.png }
 [producer] -> [consumer]: data streaming
 ```
 

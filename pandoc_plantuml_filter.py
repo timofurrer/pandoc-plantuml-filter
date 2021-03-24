@@ -18,7 +18,7 @@ PLANTUML_BIN = os.environ.get('PLANTUML_BIN', 'plantuml')
 
 def rel_mkdir_symlink(src, dest):
     dest_dir = os.path.dirname(dest)
-    if not os.path.exists(dest_dir):
+    if dest_dir and not os.path.exists(dest_dir):
         os.makedirs(dest_dir)
 
     if os.path.exists(dest):
