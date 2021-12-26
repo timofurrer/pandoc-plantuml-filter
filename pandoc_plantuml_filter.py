@@ -6,7 +6,9 @@ plant-generated images.
 Needs `plantuml.jar` from http://plantuml.com/.
 """
 
+import glob
 import os
+import re
 import sys
 import subprocess
 
@@ -51,7 +53,6 @@ def plantuml(key, value, format_, _):
 
                 subprocess.check_call(PLANTUML_BIN.split() +
                                       ["-t" + filetype, src])
-                sys.stderr.write('Created image ' + dest + '\n')
 
             # Update symlink each run
             for ind, keyval in enumerate(keyvals):
@@ -62,7 +63,48 @@ def plantuml(key, value, format_, _):
                     dest = link
                     break
 
-            return Para([Image([ident, [], keyvals], caption, [dest, typef])])
+            # Get all the generated files - when `page XxY` is used, more than one
+            # image is generated. There are in the form '[filename]_00x.[filetype]'
+            file_list = glob.glob(filename + '*.' + filetype)
+
+            if len(file_list) == 1:
+                return Para([Image([ident, [], keyvals], caption, [dest, typef])])
+            else:
+                # Case when more than one image has been generated for a plantUML diagram
+
+                # 'page hxv' defines the number of images in the horizontal and vertical direction
+                PLANTUML_PAGE_STATEMENT = re.compile(r"page ([0-9]+)x([0-9]+)")
+
+                # Order the file names
+                file_list = sorted(file_list)
+
+                # Retrieve how many images are used in the horizontal and vertical directions
+                # in this particular piece of plantUML code
+                code_lines = [l.strip() for l in code.split('\n')]
+                for code_line in code_lines:
+                    m = PLANTUML_PAGE_STATEMENT.search(code_line)
+                    if m:
+                        hpages = int(m.group(1))
+                        vpages = int(m.group(2))
+
+                        if hpages != 1:
+                            sys.stderr.write(f"Warning: the plantUML image has {hpages} horizontal images. "
+                                              "They will need to be displayed on the same line.\n")
+                        break
+
+                # Order the image from left to right and top to bottom
+                # Note: plantUML generates the images from top to bottom and left to right.
+                #       So in a configuration 'page 3x3', the second image on the right will
+                #       for instance be 'image_003.png'
+                image_list = []
+                for v in range(0, vpages):
+                    for h in range(0, hpages):
+                        index = (h * hpages) + v
+                        image_list.append(file_list[index])
+
+                return Para(
+                    [Image([ident, [], keyvals], caption, [image_filename, typef]) for image_filename in image_list]
+                )
 
 
 def main():
