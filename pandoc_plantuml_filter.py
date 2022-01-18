@@ -28,7 +28,7 @@ def rel_mkdir_symlink(src, dest):
     os.symlink(src, dest)
 
 
-def plantuml(key, value, format_, _):
+def plantuml(key, value, format_, meta):
     if key == 'CodeBlock':
         [[ident, classes, keyvals], code] = value
 
@@ -36,7 +36,11 @@ def plantuml(key, value, format_, _):
             caption, typef, keyvals = get_caption(keyvals)
 
             filename = get_filename4code("plantuml", code)
-            filetype = get_extension(format_, "png", html="svg", latex="png")
+            if meta.get('plantuml-format'):
+                pformat = meta.get('plantuml-format', None)
+                filetype = get_extension(format_, pformat['c'][0]['c'])
+            else:
+                filetype = get_extension(format_, "png", html="svg", latex="png")
 
             src = filename + '.uml'
             dest = filename + '.' + filetype
