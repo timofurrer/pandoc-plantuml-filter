@@ -13,7 +13,7 @@ import subprocess
 from pandocfilters import toJSONFilter, Para, Image
 from pandocfilters import get_filename4code, get_caption, get_extension
 
-PLANTUML_BIN = os.environ.get('PLANTUML_BIN', 'plantuml')
+PLANTUML_BIN = os.environ.get("PLANTUML_BIN", "plantuml")
 
 
 def rel_mkdir_symlink(src, dest):
@@ -29,21 +29,21 @@ def rel_mkdir_symlink(src, dest):
 
 
 def plantuml(key, value, format_, meta):
-    if key == 'CodeBlock':
+    if key == "CodeBlock":
         [[ident, classes, keyvals], code] = value
 
         if "plantuml" in classes:
             caption, typef, keyvals = get_caption(keyvals)
 
             filename = get_filename4code("plantuml", code)
-            if meta.get('plantuml-format'):
-                pformat = meta.get('plantuml-format', None)
-                filetype = get_extension(format_, pformat['c'][0]['c'])
+            if meta.get("plantuml-format"):
+                pformat = meta.get("plantuml-format", None)
+                filetype = get_extension(format_, pformat["c"][0]["c"])
             else:
                 filetype = get_extension(format_, "png", html="svg", latex="png")
 
-            src = filename + '.uml'
-            dest = filename + '.' + filetype
+            src = filename + ".uml"
+            dest = filename + "." + filetype
 
             # Generate image only once
             if not os.path.isfile(dest):
@@ -53,13 +53,12 @@ def plantuml(key, value, format_, meta):
                 with open(src, "wb") as f:
                     f.write(txt)
 
-                subprocess.check_call(PLANTUML_BIN.split() +
-                                      ["-t" + filetype, src])
-                sys.stderr.write('Created image ' + dest + '\n')
+                subprocess.check_call(PLANTUML_BIN.split() + ["-t" + filetype, src])
+                sys.stderr.write("Created image " + dest + "\n")
 
             # Update symlink each run
             for ind, keyval in enumerate(keyvals):
-                if keyval[0] == 'plantuml-filename':
+                if keyval[0] == "plantuml-filename":
                     link = keyval[1]
                     keyvals.pop(ind)
                     rel_mkdir_symlink(dest, link)
