@@ -1,0 +1,8 @@
+.env/
+__pycache__/
+example.png
+images/
+missfont.log
+pandoc_plantuml_filter.egg-info/
+plantuml-images/
+sample.pdf
