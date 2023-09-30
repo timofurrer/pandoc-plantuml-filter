@@ -1,0 +1,20 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+      - name: Setup and install tools
+        run: |
+          python -m pip install --upgrade black flake8
+      - name: black format check
+        run: black --check --line-length 120 pandoc_plantuml_filter.py tests setup.py
+      - name: flake8 format check
+        run: flake8 --max-line-length 120 pandoc_plantuml_filter.py tests setup.py
