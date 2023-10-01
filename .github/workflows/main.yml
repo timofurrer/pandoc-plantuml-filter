@@ -35,6 +35,10 @@ jobs:
         run: python -m pip install --upgrade pip setuptools wheel pytest pytest-mock
       - name: Setup package
         run: python -m pip install .
-      - name: run tests
-        run: pytest
+      - name: run unit tests
+        run: pytest tests/test_unit.py
+      - name: install dependencies for integration tests
+        run: sudo apt update && sudo apt install -y pandoc plantuml
+      - name: run integration tests
+        run: pytest tests/test_integration.py
 
