@@ -1,0 +1,44 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+      - name: Setup and install tools
+        run: |
+          python -m pip install --upgrade black flake8
+      - name: black format check
+        run: black --check --line-length 120 pandoc_plantuml_filter.py tests setup.py
+      - name: flake8 format check
+        run: flake8 --max-line-length 120 pandoc_plantuml_filter.py tests setup.py
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.8, 3.12]
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Setup build and test environment
+        run: python -m pip install --upgrade pip setuptools wheel pytest pytest-mock
+      - name: Setup package
+        run: python -m pip install .
+      - name: run unit tests
+        run: pytest tests/test_unit.py
+      - name: install dependencies for integration tests
+        run: sudo apt update && sudo apt install -y pandoc plantuml
+      - name: run integration tests
+        run: pytest tests/test_integration.py
+
