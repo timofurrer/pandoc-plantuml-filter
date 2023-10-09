@@ -6,3 +6,4 @@ missfont.log
 pandoc_plantuml_filter.egg-info/
 plantuml-images/
 sample.pdf
+dist/
