@@ -42,6 +42,22 @@ Bob --> Alice: Authentication Response
 
 The `plantuml-filename` parameter create a symlink for the destination picture, which could be used in the same file as an image directly.
 
+### Control the output file-type
+
+The generated file-type can be controlled via the file metadata:
+
+```
+---
+plantuml-format: svg
+---
+```
+
+Or directly via the cli `--metadata` argument.
+
+```
+pandoc tests/sample.md -o sample.pdf --filter pandoc-plantuml --metadata=plantuml-format=svg
+```
+
 ## But there is ...
 
 There are a few other filters trying to convert PlantUML code blocks however
