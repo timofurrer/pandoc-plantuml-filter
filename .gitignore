@@ -1,5 +1,8 @@
 .env/
+build/
+dist/
 __pycache__/
+
 example.png
 images/
 missfont.log
